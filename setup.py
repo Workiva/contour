@@ -20,10 +20,8 @@ requires = []
 
 setup(
     name='contour',
-    version="0.1.0",
+    version="0.1.1",
     description='Python configuration.',
-    long_description=open(
-        'README.md').read() + '\n\n' + open('HISTORY.md').read(),
     author='Beau Lyddon',
     author_email='beau.lyddon@webfilings.com',
     url='http://github.com/beaulyddon-wf/contour',
