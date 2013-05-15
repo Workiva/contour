@@ -3,8 +3,6 @@
 import os
 import sys
 
-import contour
-
 try:
     from setuptools import setup
 except ImportError:
@@ -22,10 +20,10 @@ requires = []
 
 setup(
     name='contour',
-    version=contour.__version__,
+    version="0.1.0",
     description='Python configuration.',
-    long_description=open('README.md').read() + '\n\n' +
-                     open('HISTORY.md').read(),
+    long_description=open(
+        'README.md').read() + '\n\n' + open('HISTORY.md').read(),
     author='Beau Lyddon',
     author_email='beau.lyddon@webfilings.com',
     url='http://github.com/beaulyddon-wf/contour',
