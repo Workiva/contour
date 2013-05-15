@@ -20,7 +20,7 @@ requires = []
 
 setup(
     name='contour',
-    version="0.1.1",
+    version="0.1.2",
     description='Python configuration.',
     author='Beau Lyddon',
     author_email='beau.lyddon@webfilings.com',
@@ -30,7 +30,6 @@ setup(
     package_dir={'contour': 'contour'},
     include_package_data=True,
     install_requires=requires,
-    setup_requires=['sphinx'],
     license=open('LICENSE').read(),
     zip_safe=False,
     classifiers=(
