@@ -28,14 +28,14 @@ class Contour(dict):
                  defaults=None):
         super(Contour, self).__init__()
 
+        # Set the defaults if they exist.
+        if defaults:
+            self.update(defaults)
+
         self._load_config(config_name, config_path)
 
         # Override local if it exists.
         self._load_config(local_config_name, local_config_path)
-
-        # Override with passed in defaults if they exist.
-        if defaults:
-            self.update(defaults)
 
     def _load_by_path(self, path):
         data = _load_yaml_config(path)

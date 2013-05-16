@@ -1,9 +1,9 @@
-__title__ = "contour"
-__license__ = "Apache 2.0"
+from contour import Contour
+from contour import MissingConfigurationError
+from contour import BadModulePathError
+from contour import InvalidYamlFile
+from contour import EmptyYamlFile
+from contour import MissingYamlFile
 
-from config import Contour
-from config import MissingConfigurationError
-from config import BadModulePathError
-from config import InvalidYamlFile
-from config import EmptyYamlFile
-from config import MissingYamlFile
+from contour import find_contour_yaml
+from contour import module_import

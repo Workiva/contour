@@ -20,7 +20,7 @@ requires = []
 
 setup(
     name='contour',
-    version="0.1.2",
+    version="0.1.3",
     description='Python configuration.',
     author='Beau Lyddon',
     author_email='beau.lyddon@webfilings.com',
