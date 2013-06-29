@@ -1,22 +1,81 @@
-#
-# Copyright 2013 WebFilings, LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import unittest
 import os
 
 from mock import patch
+
+from contour import Contour
+
+
+class ContourTestCase(unittest.TestCase):
+
+    def test_load_config_from_file(self):
+        """Ensure Contour will load a specified path."""
+        path = os.path.join('contour', '_contour.yaml')
+        c = Contour(path)
+
+        self.assertEqual(c["session"], "test")
+        self.assertEqual(c, {"session": "test"})
+
+    def test_load_local_config_from_file(self):
+        """Ensure Contour will load a specified path from local."""
+        path = os.path.join('contour', '_contour_local.yaml')
+
+        c = Contour(path)
+
+        self.assertEqual(c["session"], "localtest")
+        self.assertEqual(c, {"session": "localtest"})
+
+    def test_load_config_from_name_with_no_extension(self):
+        """Ensure Contour will load a specified name."""
+        c = Contour("_contour")
+
+        self.assertEqual(c, {"session": "test"})
+
+    def test_load_config_from_name_with_extension(self):
+        """Ensure Contour will load a specified name with an extension."""
+        c = Contour("_contour.yaml")
+
+        self.assertEqual(c, {"session": "test"})
+
+    def test_config_from_defaults(self):
+        """Ensure Contour will set the defaults passed into the init."""
+        defaults = {
+            'test': 'foo'
+        }
+        c = Contour(defaults=defaults)
+
+        self.assertEqual(c, defaults)
+
+    def test_file_overrides_defaults(self):
+        """Ensure Contour will set the defaults and override them with the
+        file.
+        """
+        defaults = {
+            'session': 'foo'
+        }
+        c = Contour("_contour.yaml", defaults=defaults)
+
+        self.assertEqual(c, {"session": "test"})
+
+    def test_local_overrides_defaults(self):
+        """Ensure Contour will set the defaults and override them with the
+        local file.
+        """
+        defaults = {
+            'session': 'foo'
+        }
+        c = Contour("_contour_local.yaml", defaults=defaults)
+
+        self.assertEqual(c, {"session": "localtest"})
+
+    def test_local_overrides_standard(self):
+        """Ensure Contour will load the standard config file and override it
+        with the local file.
+        """
+        c = Contour(config_name="_contour.yaml",
+                    local_config_name="_contour_local.yaml")
+
+        self.assertEqual(c, {"session": "localtest"})
 
 
 class TestConfigurationLoading(unittest.TestCase):

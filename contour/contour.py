@@ -1,46 +1,52 @@
-#
-# Copyright 2013 WebFilings, LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import logging
 import os
+import UserDict
 
 import yaml
 
 CONTOUR_YAML_NAMES = ['contour.yaml', 'contour.yml']
 
+# TODO: Handle other configuration formats.
+# TODO: Handle persitent storage of configuration.
 
-class Contour(dict):
+
+class MissingConfigurationError(Exception):
+    """Missing configuration option."""
+
+
+class BadModulePathError(Exception):
+    """Invalid module path."""
+
+
+class InvalidYamlFile(Exception):
+    """The config.yaml file is invalid yaml."""
+
+
+class EmptyYamlFile(Exception):
+    """The config.yaml file is empty."""
+
+
+class MissingYamlFile(Exception):
+    """config.yaml cannot be found."""
+
+
+class Contour(UserDict.IterableUserDict):
 
     def __init__(self, config_name=None, config_path=None,
                  local_config_name=None, local_config_path=None,
                  defaults=None):
-        super(Contour, self).__init__()
 
-        # Set the defaults if they exist.
-        if defaults:
-            self.update(defaults)
+        UserDict.IterableUserDict.__init__(self, dict=defaults)
 
         self._load_config(config_name, config_path)
 
-        # Override local if it exists.
+        # Override with the local config if it exists.
         self._load_config(local_config_name, local_config_path)
 
     def _load_by_path(self, path):
         data = _load_yaml_config(path)
         options = _parse_yaml_config(data)
-        self.update(options)
+        self.data.update(options)
 
     def _load_config(self, config_name=None, config_path=None):
         if not config_path and not config_name:
@@ -68,25 +74,20 @@ class Contour(dict):
         # TODO: Load the option, could be a module, function or class.
         return
 
+    def __setitem__(self, key, item):
+        raise TypeError
 
-class MissingConfigurationError(Exception):
-    """Missing configuration option."""
+    def __delitem__(self, key):
+        raise TypeError
 
+    def clear(self):
+        raise TypeError
 
-class BadModulePathError(Exception):
-    """Invalid module path."""
+    def pop(self, key, *args):
+        raise TypeError
 
-
-class InvalidYamlFile(Exception):
-    """The config.yaml file is invalid yaml."""
-
-
-class EmptyYamlFile(Exception):
-    """The config.yaml file is empty."""
-
-
-class MissingYamlFile(Exception):
-    """config.yaml cannot be found."""
+    def popitem(self):
+        raise TypeError
 
 
 def module_import(module_path):
@@ -163,7 +164,15 @@ def _find_countour_yaml(start, checked, names=None):
     Returns:
         the path of the countour.yaml file or None if it is not found
     """
-    yaml_names = (names or []) + CONTOUR_YAML_NAMES
+    extensions = []
+
+    if names:
+        for name in names:
+            if not os.path.splitext(name)[1]:
+                extensions.append(name + ".yaml")
+                extensions.append(name + ".yml")
+
+    yaml_names = (names or []) + CONTOUR_YAML_NAMES + extensions
     directory = start
 
     while directory not in checked:

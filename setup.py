@@ -3,6 +3,8 @@
 import os
 import sys
 
+VERSION = '0.2.2'
+
 try:
     from setuptools import setup
 except ImportError:
@@ -18,19 +20,24 @@ packages = [
 
 requires = []
 
+try:
+    license = open('LICENSE').read()
+except:
+    license = 'APACHE 2.0'
+
 setup(
     name='contour',
-    version="0.1.3",
+    version=VERSION,
     description='Python configuration.',
     author='Beau Lyddon',
-    author_email='beau.lyddon@webfilings.com',
-    url='http://github.com/beaulyddon-wf/contour',
+    author_email='lyddonb@gamil.com',
+    url='http://github.com/lyddonb/contour',
     packages=packages,
     package_data={'': ['LICENSE', 'NOTICE'], 'contour': ['*.pem']},
     package_dir={'contour': 'contour'},
     include_package_data=True,
     install_requires=requires,
-    license=open('LICENSE').read(),
+    license=license,
     zip_safe=False,
     classifiers=(
         'Intended Audience :: Developers',
